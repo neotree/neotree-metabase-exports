@@ -1,0 +1,1 @@
+update report_card set enable_embedding=false,embedding_params=null; 

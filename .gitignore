@@ -1,0 +1,4 @@
+env
+.vscode
+common_files/database.ini
+common_files/__pycache__

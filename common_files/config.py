@@ -6,8 +6,7 @@ import os
 import stat
 from pathlib import Path
 
-# Create Log File If Not Exist
-#logfile = Path('C:\/Users\/morris\/Documents\/metabase_export.log')
+# Create Log File If Not Exists
 logfile = Path('/var/log/metabase_export.log')
 logfile.touch(exist_ok=True)
 

@@ -18,12 +18,13 @@ def inject_sql(sql_script, file_name):
           for row in result:
               ids.append(row['card_id'])
           result.close()
+          logging.info('... {0} has successfully run'.format(file_name))
           return ids
         except Exception as e:
             logging.error('Something went wrong with the SQL file');
             logging.error(formatError(e))
             sys.exit()
-        logging.info('... {0} has successfully run'.format(file_name))
+        
 def inject_void_sql(sql_script, file_name): 
         try:
             engine.connect().execution_options(isolation_level="AUTOCOMMIT").execute(sql_script) 

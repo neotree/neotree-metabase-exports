@@ -1,1 +1,0 @@
-select card_id from public.report_dashboardcard where dashboard_id in (7) order by card_id;

@@ -31,6 +31,9 @@ async def main():
             hiv_status_ids = []
             outcomes_ids = []
             outcomes_268kg_ids = []
+            temperatures_ids = []
+            maternal_ids = []
+
             if 'demographics' in hospital_configuration:
                 demographics_ids=  str(hospital_configuration['demographics']).split(",")
             if 'hiv_status' in hospital_configuration:
@@ -38,11 +41,18 @@ async def main():
             if 'outcomes' in hospital_configuration:
                 outcomes_ids= str(hospital_configuration['outcomes']).split(",")
             if 'outcomes_268' in hospital_configuration:
-                outcomes_268kg_ids = str(hospital_configuration['outcomes_268']).split(",")  
+                outcomes_268kg_ids = str(hospital_configuration['outcomes_268']).split(",") 
+            if 'temperatures' in hospital_configuration:
+                temperatures_ids = str(hospital_configuration['temperatures']).split(",") 
+            if 'maternals' in hospital_configuration:
+                maternal_ids = str(hospital_configuration['maternals']).split(",") 
+
             demographics = []
             hiv_status = []
             outcomes =[]
             outcomes_268kg =[]
+            temperatures = []
+            maternals = []
             exports = {}
 
             metabase_url = None
@@ -82,9 +92,14 @@ async def main():
             try:
                 file_name = (cwd + "/queries/get_public_questions.sql")
                 # Convert the dashboard Ids from String to int and pass them as a tuple
+                #Dashboard Ids For Dashboards Where All Questions Are Compulsory
                 dashboard_ids = tuple(map(int, str(hospital_configuration['dashboard_ids']).split(",")));
+                # Question Ids To Facilitate For Or Query where not all questions are compulsory in a dashboard
+                combine_question_ids =tuple(map(int,(demographics_ids + hiv_status_ids + outcomes_ids 
+                                       + outcomes_268kg_ids+temperatures_ids+maternal_ids)))
+            
                 
-                sql_script = get_public_questions(dashboard_ids);
+                sql_script = get_public_questions(dashboard_ids,combine_question_ids);
                 ids = inject_sql(sql_script, "activate_embedding")
             except Exception as e:
                 logging.info('Something Wicked Happened During Activating Embedding')
@@ -121,6 +136,12 @@ async def main():
                             outcomes_268kg.append('image_{0}.png'.format(id))
                         elif str(id) in outcomes_ids:
                             outcomes.append('image_{0}.png'.format(id))
+                        elif str(id) in temperatures_ids:
+                            temperatures.append('image_{0}.png'.format(id))
+
+                        elif str(id) in maternal_ids:
+                            maternals.append('image_{0}.png'.format(id))
+
                         else:
                             exports['screen_{0}'.format(screen_number)] =['image_{0}.png'.format(id)]
                             screen_number = screen_number+1
@@ -147,7 +168,10 @@ async def main():
                         exports['outcomes'] =  sorted(outcomes, key=lambda x: list(map(int,outcomes_ids)).index(int(''.join(d for d in x if d.isdigit()))))
                     if outcomes_268kg_ids and outcomes_268kg:
                         exports['outcomes_268kg'] =sorted(outcomes_268kg, key=lambda x: list(map(int,outcomes_268kg_ids)).index(int(''.join(d for d in x if d.isdigit()))))
-
+                    if temperatures_ids and temperatures:
+                        exports['temperatures'] =sorted(temperatures, key=lambda x: list(map(int,temperatures_ids)).index(int(''.join(d for d in x if d.isdigit()))))
+                    if maternal_ids and maternals:
+                        exports['maternals'] =sorted(maternals, key=lambda x: list(map(int,maternal_ids)).index(int(''.join(d for d in x if d.isdigit()))))
                     #Write The Json To The File
                     try:
                         json_file = json.dumps(exports)

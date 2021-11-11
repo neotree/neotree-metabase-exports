@@ -154,7 +154,7 @@ async def main():
             
                 except Exception as e:
                     logging.info('Something Wicked Happened During Images Exportation.')
-                    raise e.with_traceback()
+                    logging.exception(e)
                     sys.exit(1)
                 #Disable Link Embedding As A Security Measure
                 try:

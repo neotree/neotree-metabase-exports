@@ -122,7 +122,7 @@ async def main():
        
                 try:
                     if export_dir is not None:
-                        browser = await launch({'dumpio':True,'verify':False,'args': ['--no-sandbox', '--disable-setuid-sandbox','--headless','--disable-gpu','--disable-software-rasterizer','--disable-dev-shm-usage']})
+                        browser = await launch({'dumpio':True,'args': ['--no-sandbox', '--disable-setuid-sandbox','--headless','--disable-gpu','--disable-software-rasterizer','--disable-dev-shm-usage']})
                         page = await browser.newPage()
                         url = '{0}embed/question/{1}#bordered=true&titled=true'.format(metabase_url,token)
                         await page.goto(url,timeout=0,fullPage=True,waitUntil='networkidle0')

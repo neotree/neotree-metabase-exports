@@ -125,9 +125,10 @@ async def main():
                         browser = await launch({'dumpio':True,'args': ['--no-sandbox', '--disable-setuid-sandbox','--headless','--disable-gpu','--disable-software-rasterizer','--disable-dev-shm-usage']})
                         page = await browser.newPage()
                         url = '{0}embed/question/{1}#bordered=true&titled=true'.format(metabase_url,token)
+                        await page.setViewport({'width': 1920, 'height': 1080})
                         await page.goto(url,timeout=0,fullPage=True,waitUntil='networkidle0')
                         await page.screenshot({'path': '{0}image_{1}.png'.format(export_dir,id)})
-                        
+                                                                
                         if str(id) in demographics_ids:
                             demographics.append('image_{0}.png'.format(id))
                         elif str(id) in hiv_status_ids:

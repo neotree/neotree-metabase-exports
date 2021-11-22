@@ -97,10 +97,16 @@ async def main():
                 # Question Ids To Facilitate For Or Query where not all questions are compulsory in a dashboard
                 combine_question_ids =tuple(map(int,(demographics_ids + hiv_status_ids + outcomes_ids 
                                        + outcomes_268kg_ids+temperatures_ids+maternal_ids)))
+                # Special Resolution IDs require full screen rendering
+                special_resolution_ids = tuple()
+                if 'special_resolution' in hospital_configuration:
+                    special_resolution_ids = tuple(map(int,str(hospital_configuration['special_resolution']).split(",")))
+
+
             
                 
                 sql_script = get_public_questions(dashboard_ids,combine_question_ids);
-                ids = inject_sql(sql_script, "activate_embedding")
+                ids = inject_sql(sql_script, "getting_dashboard_cards")
             except Exception as e:
                 logging.info('Something Wicked Happened During Activating Embedding')
                 logging.error(formatError(e))
@@ -125,7 +131,9 @@ async def main():
                         browser = await launch({'dumpio':True,'args': ['--no-sandbox', '--disable-setuid-sandbox','--headless','--disable-gpu','--disable-software-rasterizer','--disable-dev-shm-usage']})
                         page = await browser.newPage()
                         url = '{0}embed/question/{1}#bordered=true&titled=true'.format(metabase_url,token)
-                        #await page.setViewport({'width': 1920, 'height': 1080})
+                        # Set a bigger Page View Port if the page is too big
+                        if id in special_resolution_ids:
+                            await page.setViewport({'width': 1920, 'height': 1080})
                         await page.goto(url,timeout=0,fullPage=True,waitUntil='networkidle0')
                         await page.screenshot({'path': '{0}image_{1}.png'.format(export_dir,id)})
                                                                 

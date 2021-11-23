@@ -135,6 +135,10 @@ async def main():
                         if id in special_resolution_ids:
                             await page.setViewport({'width': 1920, 'height': 1080})
                         await page.goto(url,timeout=0,fullPage=True,waitUntil='networkidle0')
+                        # Click Mouse To make Images that Needs Mouse hover to fully display fully display
+                        await page.mouse.down() 
+                        #Release Mouse
+                        await page.mouse.up()
                         await page.screenshot({'path': '{0}image_{1}.png'.format(export_dir,id)})
                                                                 
                         if str(id) in demographics_ids:

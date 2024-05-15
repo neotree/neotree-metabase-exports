@@ -1,5 +1,4 @@
 import asyncio
-from pyppeteer import launch
 import re
 import jwt
 from common_files.config import config
@@ -13,6 +12,7 @@ import datetime
 import json
 from common_files.sql_functions import inject_sql, inject_void_sql
 from queries.get_public_questions import get_public_questions
+from create_screenshot import create_shot
 
 
 async def main():
@@ -105,11 +105,6 @@ async def main():
                 # Question Ids To Facilitate For Or Query where not all questions are compulsory in a dashboard
                 combine_question_ids = tuple(map(int, (demographics_ids + hiv_status_ids + outcomes_ids
                                                        + outcomes_268kg_ids+temperatures_ids+maternal_ids)))
-                # Special Resolution IDs require full screen rendering
-                special_resolution_ids = tuple()
-                if 'special_resolution' in hospital_configuration:
-                    special_resolution_ids = tuple(
-                        map(int, str(hospital_configuration['special_resolution']).split(",")))
 
                 sql_script = get_public_questions(
                     dashboard_ids, combine_question_ids)
@@ -136,26 +131,12 @@ async def main():
 
                 try:
                     if export_dir is not None:
-                        browser = await launch(args =['--dumpio','--no-sandbox', '--disable-setuid-sandbox','--headless','--disable-gpu','--disable-software-rasterizer','--disable-dev-shm-usage'])
-                        page = await browser.newPage()
                         url = '{0}embed/question/{1}#bordered=true&titled=true'.format(
-                            metabase_url, token)
-                        # Set a bigger Page View Port if the page is too big
-                        if id in special_resolution_ids:
-                            await page.setViewport({'width': 1080, 'height': 720,'deviceScaleFactor': 2})
+                            metabase_url,token)
+                    
                         try:
-                            
-                            await page.goto(url,timeOut=300000,fullPage=True,waitUntil='networkidle0')
-                            
-        
-                            # Click Mouse To make Images that Needs Mouse hover to fully display before the screen short is taken
-                            await page.mouse.down()
-                            # Release Mouse
-                            await page.mouse.up()
-                            try:
-                                await page.screenshot({'path': '{0}image_{1}.png'.format(export_dir, id)})
-                            except Exception as eex:
-                                logging.info("000-----",str(eex))
+                           create_shot(export_dir,url,id)
+                       
                         except Exception as ex:
                             logging.error("--GO TO ERROR---"+str(ex))
 
@@ -177,9 +158,6 @@ async def main():
                             exports['screen_{0}'.format(screen_number)] = [
                                 'image_{0}.png'.format(id)]
                             screen_number = screen_number+1
-
-                        # await page.screenshot({'path': '{0}image_{1}.png'.format(export_dir,i)})
-                        await browser.close()
                     else:
                         logging.info(
                             'Please specify directory to put your exports your database.ini file i.e export_dir')

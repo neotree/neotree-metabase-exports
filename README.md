@@ -16,6 +16,13 @@ In order to get the best out of the source code:
 * Don't remove any lines from the `.gitignore` file we provide
 * Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `common_files/database.ini`
 
+## INSTALL SELENIUM FIREFOX DRIVER
+1. In your ubuntu terminal, run the following commands: 
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
+  - tar -xvzf geckodriver-v0.30.0-linux64.tar.gz
+  - sudo mv geckodriver /usr/local/bin/
+  - sudo chmod +x /usr/local/bin/geckodriver
+
 ## INSTALLING DEPENDENCIES
 At this stage the assumption is that we have cloned the code base to our local machine
 1. cd into cwd ie (Current Working Directory or Project Directory)

@@ -139,3 +139,6 @@ After running the above command, logs should start appearing on your screen, det
 2. Once completed, browse to the location where the images are exported
   *You should have a pop-up window where you can enter your username and password. The content should only show, if the correct credentials were provided*
 
+## COMMON ERRORS
+ - Expected browser binary location, but unable to find binary in default location, no 'moz:firefoxOptions.binary
+ - Resolve by installing firefox on the server : sudo apt install firefox

@@ -232,6 +232,7 @@ async def main():
             sql_script = sql_file.read()
             sql_file.close()
             inject_void_sql(sql_script, "deactivate_embedding")
+            logging.info("...COMPLETED EXPORTING...")
         except Exception as e:
             logging.info(
                 'Something Wicked Happened During Deactivating Embedding')

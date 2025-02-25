@@ -175,6 +175,7 @@ async def main():
 
                         else:
                             if id !='None' and id is not None:
+                                logging.info("###ID#######=000-"+str(id))
                                 exports['screen_{0}'.format(screen_number)] = [
                                 '   image_{0}.png'.format(id)]
                                 screen_number = screen_number+1

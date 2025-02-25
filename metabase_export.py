@@ -159,6 +159,8 @@ async def main():
                         except Exception as ex:
                             logging.error("--GO TO ERROR---"+str(ex))
 
+                        logging.info("###ID#######=BEFORE-"+str(id))
+
                         if str(id) in demographics_ids:
                             demographics.append('image_{0}.png'.format(id))
                         elif str(id) in hiv_status_ids:
@@ -174,8 +176,8 @@ async def main():
                             maternals.append('image_{0}.png'.format(id))
 
                         else:
+                            logging.info("###ID#######=000-"+str(id))
                             if id !='None' and id is not None:
-                                logging.info("###ID#######=000-"+str(id))
                                 exports['screen_{0}'.format(screen_number)] = [
                                 '   image_{0}.png'.format(id)]
                                 screen_number = screen_number+1

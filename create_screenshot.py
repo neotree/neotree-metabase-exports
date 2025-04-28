@@ -17,20 +17,20 @@ def create_shot(export_dir, question_url, question_id):
     try:
         driver.get(question_url)
 
-        # Wait until the page has completely loaded
+        # Wait until the page base HTML is fully loaded
         WebDriverWait(driver, 20).until(
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
 
-        # Optional: Wait for a specific element to appear (modify selector as needed)
+        # Wait until the loading spinner disappears
         try:
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            WebDriverWait(driver, 30).until_not(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Loading')]"))
             )
         except Exception as e:
-            print(f"Warning: Timeout while waiting for body tag - {str(e)}")
+            print(f"Warning: Timeout waiting for loading spinner to disappear - {str(e)}")
 
-        # Allow additional time for any dynamic content
+        # Allow a little extra time for final rendering
         time.sleep(2)
 
         # Take a screenshot
@@ -48,4 +48,3 @@ def create_shot(export_dir, question_url, question_id):
         log_files = glob.glob('*.log')
         for log_file in log_files:
             os.remove(log_file)
-
